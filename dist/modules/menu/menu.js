@@ -217,33 +217,53 @@ class menu {
          * @param {?TResolution} [res]
          * @param {?(Electron.MenuItemConstructorOptions | MenuItem)[]} [menuItems]
          */
-        this.overlayLoad = (contentLocation, transparentBg, res, menuItems) => {
+        const { screen } = require('electron');
+
+        /**
+ * Loading of an overlay item
+ * @date 8/8/2023 - 9:42:20 AM
+ *
+ * @param {string} contentLocation
+ * @param {?TResolution} [res]
+ * @param {?(Electron.MenuItemConstructorOptions | MenuItem)[]} [menuItems]
+ */
+        this.overlayLoad = (contentLocation, res, menuItems) => {
             if (this.overlayConfigured())
-                this.overlayClose();
+              this.overlayClose();
             if (this.helper.fileExists(contentLocation)) {
-                let transBg = transparentBg || false;
-                let resolution = res || this.settings.resolution;
-                this.overlayMenuItems = menuItems || this.overlayMenuItemsDefault();
-                this.overlayMenu = electron_1.Menu.buildFromTemplate(this.overlayMenuItems);
-                this.overlay = new electron_1.BrowserWindow({
-                    x: this.offsetX(resolution.width),
-                    y: this.offsetY(resolution.height),
-                    width: resolution.width,
-                    height: resolution.height,
-                    modal: true,
-                    transparent: transBg,
-                    frame: false,
-                    webPreferences: {
-                        nodeIntegration: true,
-                        devTools: true,
-                        contextIsolation: false,
-                    }
-                });
-                this.overlay.setMenu(this.overlayMenu);
-                this.overlay.loadURL(contentLocation);
-                this.overlay.on('closed', () => this.overlayClose());
+              const mainBounds = this.application.getBounds();
+              const overlayX = mainBounds.x; // Set the x position to the same as the application window
+              const overlayY = mainBounds.y;
+              const resolution = res || this.settings.resolution;
+              this.overlayMenuItems = menuItems || this.overlayMenuItemsDefault();
+              this.overlayMenu = electron_1.Menu.buildFromTemplate(this.overlayMenuItems);
+              this.overlay = new electron_1.BrowserWindow({
+                x: overlayX,
+                y: overlayY,
+                // width: Math.min(resolution.width, mainBounds.width),
+                // height: Math.min(resolution.height, mainBounds.height),
+                width: mainBounds.width,
+                height: mainBounds.height,
+                modal: true,
+                transparent: false,
+                frame: false,
+                webPreferences: {
+                  nodeIntegration: true,
+                  devTools: true,
+                  contextIsolation: false,
+                }
+              });
+              this.overlay.setMenu(this.overlayMenu);
+              this.overlay.loadURL(contentLocation);
+              this.overlay.on('closed', () => this.overlayClose());
             }
-        };
+          };
+         
+          
+          
+          
+        
+
         /**
          * Is the overlay window configured?
          * @date 8/8/2023 - 9:42:19 AM
