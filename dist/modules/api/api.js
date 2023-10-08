@@ -124,6 +124,14 @@ class api {
                     response.data = JSON.parse(this.helper.loadFile(`${this.settings.templateDir}/data.json`).replace('var clientData =', ''));
                 res.json(response);
             });
+            this.apiApp.get('/api/getImage/:imageName', (req, res) => {
+                const imageName = req.params.imageName;
+                // Construct the path to the image file based on your server's file structure
+                const imagePath = `${this.settings.templateDir}/content/images/${imageName}`;
+    
+                // Use the `res.sendFile` method to send the image file as a response
+                res.sendFile(imagePath);
+            }) 
         };
         this.apiApp = (0, express_1.default)();
         this.apiApp.use((0, cors_1.default)());

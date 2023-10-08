@@ -7,6 +7,7 @@ import { TSettings } from "../../common/common.types"
 import { menu } from "../menu/menu"
 import { TResponseBase, TResponseDataJson, responseBase } from "./api.types"
 import cors from 'cors'
+
 /**
  * API Class
  * @date 8/8/2023 - 9:42:31 AM
@@ -137,6 +138,14 @@ export class api {
             if (!response.error)
                 response.data = JSON.parse(this.helper.loadFile(`${this.settings.templateDir}/data.json`).replace('var clientData =', ''))
             res.json(response)
-        })
+        })  
+        this.apiApp.get('/api/getImage/:imageName', (req: express.Request, res: express.Response) => {
+            const imageName = req.params.imageName;
+            // Construct the path to the image file based on your server's file structure
+            const imagePath = `${this.settings.templateDir}/content/images/${imageName}`;
+
+            // Use the `res.sendFile` method to send the image file as a response
+            res.sendFile(imagePath);
+        }) 
     }
 }
