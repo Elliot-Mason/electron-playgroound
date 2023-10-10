@@ -148,12 +148,12 @@ export class api {
             res.sendFile(imagePath);
         }) 
         this.apiApp.get('/api/getVideo/:videoName', (req: express.Request, res: express.Response) => {
-                const videoName = req.params.videoName;
-                // Construct the path to the image file based on your server's file structure
-                const videoPath = `${this.settings.templateDir}/content/videos/${videoName}`;
-    
-                // Use the `res.sendFile` method to send the image file as a response
-                res.sendFile(videoPath);
+            const videoName = req.params.videoName;
+            // Construct the path to the image file based on your server's file structure
+            const videoPath = `${this.settings.templateDir}/content/videos/${videoName}`;
+
+            // Use the `res.sendFile` method to send the image file as a response
+            res.sendFile(videoPath);
         }) 
     }
 }
